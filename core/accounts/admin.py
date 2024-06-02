@@ -1,9 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User
-# Register your models here.
+from django import forms
+
+
 class CustomUserAdmin(UserAdmin):
-    model : User
+    model = User
     list_display = ('email','is_superuser','is_active')
     list_filter = ('email','is_superuser','is_active')
     search_fields = ('email',)
@@ -17,6 +19,16 @@ class CustomUserAdmin(UserAdmin):
         ('permissions',{
             "fields": (
                 'is_staff', 'is_active', 'is_superuser'
+            )
+        }),
+        ('group permissions',{
+            "fields": (
+                'groups', 'user_permissions'
+            )
+        }),
+          ('important date',{
+            "fields": (
+                'last_login',
             )
         }),
     )
