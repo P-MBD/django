@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
-from django.views.generic import ListView, DetailView,FormView
+from django.views.generic import ListView, DetailView,FormView, UpdateView
 from .models import Post
 from .forms import PostForm
 # Create your views here.
@@ -32,6 +32,10 @@ class PostCreateView(FormView):
         form.instance.author = self.request.user 
         form.save()
         return super().form_valid(form)
-
+        
+class PostEditView(UpdateView):
+    model = Post
+    form_class = PostForm
+    success_url = '/blog/post/'
 
 
