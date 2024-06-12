@@ -29,9 +29,9 @@ class PostCreateView(FormView):
     form_class = PostForm
     success_url = '/blog/post/'
     def form_valid(self, form):
-        # This method is called when valid form data has been POSTed.
-        # It should return an HttpResponse.
+        form.instance.author = self.request.user 
         form.save()
         return super().form_valid(form)
+
 
 
