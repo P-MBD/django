@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from .models import Post
 # Create your views here.
 def indexView (request):
@@ -19,4 +19,6 @@ class PostList(ListView):
     def get_queryset(self):
         posts = Post.objects.filter(status= True)
         return posts
+class PostDetailView(DetailView):
+    model = Post
 
