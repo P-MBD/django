@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
-from django.views.generic import ListView, DetailView,FormView, UpdateView
+from django.views.generic import ListView, DetailView,FormView, UpdateView,DeleteView
 from .models import Post
 from .forms import PostForm
 # Create your views here.
@@ -39,3 +39,6 @@ class PostEditView(UpdateView):
     success_url = '/blog/post/'
 
 
+class PostDeleteView(DeleteView):
+    model = Post
+    success_url = "/blog/post/"
