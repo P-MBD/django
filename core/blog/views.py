@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
-from django.views.generic import ListView, DetailView,FormView, UpdateView,DeleteView
+from django.views.generic import ListView, DetailView,FormView, UpdateView,DeleteView,CreateView
 from .models import Post
 from .forms import PostForm
+from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
 # Create your views here.
 def indexView (request):
     return render(request, "index.html")
@@ -15,17 +16,21 @@ class IndexView(TemplateView):
         context["name"] = "ali"
         return context
 
-class PostList(ListView):
+class PostList(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required ='blog.view_post'
+    queryset = Post.objects.all()
     context_object_name = "posts"
-    def get_queryset(self):
-        posts = Post.objects.filter(status= True)
-        return posts
+    ordering = 'id'
+    #def get_queryset(self):
+        #posts = Post.objects.filter(status= True)
+        #return posts
 class PostDetailView(DetailView):
     model = Post
 
 
-class PostCreateView(FormView):
-    template_name = 'contact.html'
+class PostCreateView(LoginRequiredMixin,CreateView):
+    model = Post
+    #template_name = 'contact.html'
     form_class = PostForm
     success_url = '/blog/post/'
     def form_valid(self, form):
@@ -33,12 +38,12 @@ class PostCreateView(FormView):
         form.save()
         return super().form_valid(form)
         
-class PostEditView(UpdateView):
+class PostEditView(LoginRequiredMixin,UpdateView):
     model = Post
     form_class = PostForm
     success_url = '/blog/post/'
 
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     success_url = "/blog/post/"
