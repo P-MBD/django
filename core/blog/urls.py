@@ -3,12 +3,14 @@ from . import views
 from django.views.generic import TemplateView
 app_name = "blog"
 urlpatterns = [
-    path('fbv-index', views.indexView, name="fbv+index"),
-    #path('cbv-index', TemplateView.as_view(template_name="index.html", extra_context={"name":"ali"}))
-     path('cbv-index', views.IndexView.as_view(), name='cbv-index'),
-     path('post/',views.PostList.as_view(), name="post-list"),
-     path('post/<int:pk>',views.PostDetailView.as_view(), name="post-detail"),
-     path('post/create/',views.PostCreateView.as_view(), name="post-create"),
-     path('post/<int:pk>/edit/',views.PostEditView.as_view(), name="post-edit"),
-     path('post/<int:pk>/delete/',views.PostDeleteView.as_view(), name="post-delete")
+            # path('fbv-index', views.indexView, name="fbv+index"),
+            # path('cbv-index', TemplateView.as_view(template_name="index.html", extra_context={"name":"ali"}))
+            # path('cbv-index', views.IndexView.as_view(), name='cbv-index'),
+            # path('post/',views.PostList.as_view(), name="post-list"),
+            # path('post/<int:pk>',views.PostDetailView.as_view(), name="post-detail"),
+            # path('post/create/',views.PostCreateView.as_view(), name="post-create"),
+            # path('post/<int:pk>/edit/',views.PostEditView.as_view(), name="post-edit"),
+            # path('post/<int:pk>/delete/',views.PostDeleteView.as_view(), name="post-delete")
+            path('post/', views.api_post_list_view, name="api-post-list"),
 ]
+                    
