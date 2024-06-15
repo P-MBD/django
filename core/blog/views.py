@@ -5,6 +5,7 @@ from .models import Post
 from .forms import PostForm
 from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
 from django.http import HttpResponse
+
 # Create your views here.
 def indexView (request):
     return render(request, "index.html")
@@ -49,5 +50,3 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     success_url = "/blog/post/"
 
-def api_post_list_view(request):
-    return HttpResponse("ok")
