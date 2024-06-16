@@ -11,7 +11,12 @@ def postList(request):
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
     elif request.method == "POST":
-        return Response("ok")
+        serializer = PostSerializer(data= request.data)
+        if serializer.is_valid():
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
+
 @api_view()
 def postDetail(request,id):
     post = get_object_or_404(Post,pk=id)
