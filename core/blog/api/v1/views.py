@@ -3,14 +3,10 @@ from rest_framework.response import Response
 from .serializers import PostSerializer
 from ...models import Post
 from django.shortcuts import get_object_or_404
-data={
-    "id":1,
-    "title":"hello"
-}
 
-@api_view()
+@api_view(["GET","POST"])
 def postList(request):
-    posts = get_object_or_404(Post, pk=id)
+    posts =Post.objects.filter(status=True)
     serializer = PostSerializer(posts, many=True)
     return Response(serializer.data)
 
