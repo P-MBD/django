@@ -10,7 +10,9 @@ data={
 
 @api_view()
 def postList(request):
-    return Response("ok")
+    posts = get_object_or_404(Post, pk=id)
+    serializer = PostSerializer(posts, many=True)
+    return Response(serializer.data)
 
 @api_view()
 def postDetail(request,id):
