@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly,IsAdminUser
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView,ListCreateAPIView, RetrieveUpdateDestroyAPIView,RetrieveAPIView
 from rest_framework import mixins
 
 """@api_view(["GET","POST"])
@@ -39,16 +39,10 @@ from rest_framework import mixins
 #             return Response(serializer.data)
 #         else:
 #             return Response(serializer.errors)
-class PostList(GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
-    """getting a list of posts and creating new posts"""
+class PostList(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
  
 
 """@api_view(["GET","PUT","DELETE"])
@@ -66,7 +60,7 @@ def postDetail(request,id):
         post.delete()
         return Response({"detail":"item removed successfully"},status=status.HTTP_204_NO_CONTENT)"""
 
-class PostDetail(APIView):
+'''class PostDetail(APIView):
     """getting detail of the post and edit plus removing it"""
     permission_classes =[IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
@@ -85,8 +79,11 @@ class PostDetail(APIView):
     def delete(self, request, id):
         post = get_object_or_404(Post, pk=id)
         post.delete()
-        return Response({"detail":"item removed successfully"},status=status.HTTP_204_NO_CONTENT)
+        return Response({"detail":"item removed successfully"},status=status.HTTP_204_NO_CONTENT)'''
 
 
-
+class PostDetail(RetrieveUpdateDestroyAPIView):
+    permission_classes =[IsAuthenticatedOrReadOnly] 
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
 
