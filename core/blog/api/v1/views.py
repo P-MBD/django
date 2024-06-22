@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly,IsAdminUser
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView,ListCreateAPIView, RetrieveUpdateDestroyAPIView,RetrieveAPIView
-from rest_framework import mixins
+from rest_framework import mixins, viewsets
 
 """@api_view(["GET","POST"])
 @permission_classes([IsAdminUser])
@@ -39,11 +39,33 @@ from rest_framework import mixins
 #             return Response(serializer.data)
 #         else:
 #             return Response(serializer.errors)
-class PostList(ListCreateAPIView):
+'''class PostList(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
- 
+ '''
+
+class PostViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
+    def list(self, request):
+        serializer = self.serializer_class(self.queryset, many=True)
+        return Response(serializer.data)
+    def retrieve(self, request, pk=None):
+        post_object = get_object_or_404(self.queryset, pk = pk)
+        serializer = self.serializer_class(post_object)
+        return Response(serializer.data)
+    def create(self, request):
+        pass
+    def update(self, request, pk=None):
+        pass
+
+    def partial_update(self, request, pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass
 
 """@api_view(["GET","PUT","DELETE"])
 def postDetail(request,id):
