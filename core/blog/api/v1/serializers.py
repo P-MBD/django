@@ -12,7 +12,7 @@ class PostSerializer(serializers.ModelSerializer):
     relative_path = serializers.URLField(source="get_absolute_api_url", read_only=True)
     absolute_url = serializers.SerializerMethodField(method_name='get_abs_url')
     #category = serializers.SlugRelatedField(many=False,slug_field='name',queryset=Category.objects.all())
-    category = CategorySerializer()
+    #category = CategorySerializer()
     class Meta:
         model = Post
         fields = ["id","author","image","title", "content","snippet","category","status","absolute_url","relative_path","created_date","published_date",
@@ -22,7 +22,9 @@ class PostSerializer(serializers.ModelSerializer):
         return request.build_absolute_uri(obj.pk)
 
     def to_representation(self, instance):
-        return super().to_representation(instance)
+        rep = super().to_representation(instance)
+        rep['category'] = CategorySerializer(instance.category).data
+        return rep
 
 
 
