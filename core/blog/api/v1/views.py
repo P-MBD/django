@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView,ListCreateAPIView, RetrieveUpdateDestroyAPIView,RetrieveAPIView
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import api_view, permission_classes, action
-
+from .permissions import IsOwnerOrReadOnly
 """@api_view(["GET","POST"])
 @permission_classes([IsAdminUser])
     def postList(request):
@@ -23,31 +23,13 @@ from rest_framework.decorators import api_view, permission_classes, action
         else:
             return Response(serializer.errors)"""
 
-# class PostList(APIView):
-#     """getting a list of posts and creating new posts"""
-#     permission_classes = [IsAuthenticated]
-#     serializer_class = PostSerializer
-#     def get(self, request):
-#         """retriving a list of post """
-#         posts =Post.objects.filter(status=True)
-#         serializer = PostSerializer(posts, many=True)
-#         return Response(serializer.data)
-#     def post(self, request):
-#         """creating a post with providing data"""
-#         serializer = PostSerializer(data= request.data)
-#         if serializer.is_valid():
-#             return Response(serializer.data)
-#         else:
-#             return Response(serializer.errors)
 '''class PostList(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
  '''
-
-
 class PostModelViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
     @action(methods = ["get"], detail=False)
