@@ -2,5 +2,11 @@ Django>=3.2,<3.3
 python-decouple 
 Pillow
 djangorestframework
+
+#third party modules
 markdown       # Markdown support for the browsable API.
 django-filter  # Filtering support
+drf-yasg[validation]
+
+#deployment modules
+
