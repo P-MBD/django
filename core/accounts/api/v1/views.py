@@ -22,10 +22,28 @@ class RegistrationApiView(generics.GenericAPIView):
         serializer= RegistrationSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
+            email = serializer.validated_data['email']
             data= {
-                'email':serializer.validated_data['email']}
+                 'email':email
+                   }
+            user_obj = get_object_or_404(User, email=email)
+            token = self.get_tokens_for_user(user_obj)
+            email_obj = EmailMessage(
+              "email/activation_email.tpl",
+             {"token": token},
+             "admin@admin.com",
+             to=[email],
+                 )
+            EmailThread(email_obj).start()
+
             return Response(data, status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+        
+    def get_tokens_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+        return str(refresh.access_token)
+
+
 class CustomObtainAuthToken(ObtainAuthToken):
     serializer_class = CustomAuthTokenSerializer
     def post(self, request, *args, **kwargs):
@@ -109,5 +127,11 @@ class TestEmailSend(generics.GenericAPIView):
         return str(refresh.access_token)
 
 
+class ActivationApiView(APIView):
+    def get(self, request, token, *args, **kwargs):
+        print(token)
+        print(kwargs)
+        print(args)
+        return Response(token)
 
         
