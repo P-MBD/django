@@ -113,14 +113,15 @@ class ProfileApiView(generics.RetrieveUpdateAPIView):
    
 class TestEmailSend(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
-        self.email = "test@gmail.com"
+        self.email = "f.mobedi@gmail.com"
         user_obj = get_object_or_404(User, email=self.email)
         token = self.get_tokens_for_user(user_obj)
         email_obj = EmailMessage(
             "email/hello.tpl",
             {"token": token},
             "admin@admin.com",
-            to=[self.email],)
+            to=[self.email],
+        )
         EmailThread(email_obj).start()
         return Response("email sent")
 
