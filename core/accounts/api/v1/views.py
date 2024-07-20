@@ -13,7 +13,9 @@ from ..utils import EmailThread
 from mail_templated import EmailMessage
 from ..utils import EmailThread
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from django.conf import settings
+import jwt
+from jwt.exceptions import ExpiredSignatureError, InvalidSignatureError
 User = get_user_model()
 
 class RegistrationApiView(generics.GenericAPIView):
@@ -129,9 +131,41 @@ class TestEmailSend(generics.GenericAPIView):
 
 class ActivationApiView(APIView):
     def get(self, request, token, *args, **kwargs):
-        print(token)
-        print(kwargs)
-        print(args)
-        return Response(token)
+        try:
+            token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            user_id = token.get("user_id")
+        except ExpiredSignatureError:
+            return Response({'details','token has been expired'},status=status.HTTP_400_BAD_REQUEST )
+        except InvalidSignatureError:
+             return Response({'details','token is not valid'},status=status.HTTP_400_BAD_REQUEST )
+        user_obj = User.objects.get(pk=user_id)
+        if user_obj.is_verified:
+            return Response({"details": "your account has already been verified"})
+        user_obj.is_verified = True
+        user_obj.save()
+        return Response(
+            {"details": "your account have been verified and activated successfully"}
+        )
 
+class ActivationResendApiView(APIView):
+    def post(self,request,*args,**kwargs):
+        email= request.data.get('email')
+        if email:
+            self.email = "test@gmail.com"
+            user_obj = get_object_or_404(User, email=self.email)
+            token = self.get_tokens_for_user(user_obj)
+            email_obj = EmailMessage(
+                "email/hello.tpl",
+                {"token": token},
+                "admin@admin.com",
+                 to=[self.email],)
+            EmailThread(email_obj).start()
+            return Response(
+                 {"details": "user activation resend successfully"},
+                  status=status.HTTP_200_OK,
+                    )
+        else:
+            return Response(
+                 {"details": "invalid request"},
+                  status=status.HTTP_200_OK,)
         

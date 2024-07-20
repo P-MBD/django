@@ -9,8 +9,9 @@ urlpatterns = [
     path('test-email',views.TestEmailSend.as_view(), name='test-email'),
     #activation
     path('activation/confirm/<str:token>',views.ActivationApiView.as_view(),name= 'activation'),
-    #path('activation/confirm')
     #resend activation
+    path('activation/resend/',views.ActivationResendApiView.as_view(),name= 'activation-resend'),
+
     #path('activation/resend')
     #change password
     path('password-change/', views.ChangePasswordApiView.as_view(), name='change-password'),
