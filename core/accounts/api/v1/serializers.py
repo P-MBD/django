@@ -16,7 +16,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if attrs.get("password") != attrs.get("password1"):
-            raise serializers.ValidationError({"detail": "passswords doesnt match"})
+            raise serializers.ValidationError(
+                {"detail": "passswords doesnt match"}
+            )
         try:
             validate_password(attrs.get("password"))
         except exceptions.ValidationError as e:
@@ -56,7 +58,9 @@ class CustomAuthTokenSerializer(serializers.Serializer):
                 msg = _("Unable to log in with provided credentials.")
                 raise serializers.ValidationError(msg, code="authorization")
             if not user.is_verified:
-                raise serializers.ValidationError({"detail": "user is not verified"})
+                raise serializers.ValidationError(
+                    {"detail": "user is not verified"}
+                )
 
         else:
             msg = _('Must include "username" and "password".')
@@ -82,12 +86,16 @@ class ChangePasswordSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         if attrs.get("new_password") != attrs.get("new_password1"):
-            raise serializers.ValidationError({"detail": "passswords doesnt match"})
+            raise serializers.ValidationError(
+                {"detail": "passswords doesnt match"}
+            )
 
         try:
             validate_password(attrs.get("new_password"))
         except exceptions.ValidationError as e:
-            raise serializers.ValidationError({"new_password": list(e.messages)})
+            raise serializers.ValidationError(
+                {"new_password": list(e.messages)}
+            )
         return super().validate(attrs)
 
 
@@ -96,7 +104,14 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ("id", "email", "first_name", "last_name", "image", "description")
+        fields = (
+            "id",
+            "email",
+            "first_name",
+            "last_name",
+            "image",
+            "description",
+        )
         read_only_fields = ["email"]
 
 
@@ -108,7 +123,9 @@ class ActivationResendSerializer(serializers.Serializer):
         try:
             user_obj = User.objects.get(email=email)
         except User.DoesNotExist:
-            raise serializers.ValidationError({"detail": "user does not exist"})
+            raise serializers.ValidationError(
+                {"detail": "user does not exist"}
+            )
         if user_obj.is_verified:
             raise serializers.ValidationError(
                 {"detail": "user is already activated and verified"}

@@ -1,0 +1,15 @@
+[flake8]
+exclude =
+    .git,
+    .gitignore,
+    *.pot,
+    *.py[co],
+    __pycache__,
+    venv,
+    .env,
+    settings,
+    __int__,
+ignore =
+    E501
+   
+max-line-length = 200

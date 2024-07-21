@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User, Profile
-from django import forms
 
 
 class CustomUserAdmin(UserAdmin):
@@ -14,7 +13,14 @@ class CustomUserAdmin(UserAdmin):
         ("Authentication", {"fields": ("email", "password")}),
         (
             "permissions",
-            {"fields": ("is_staff", "is_active", "is_superuser", "is_verified")},
+            {
+                "fields": (
+                    "is_staff",
+                    "is_active",
+                    "is_superuser",
+                    "is_verified",
+                )
+            },
         ),
         ("group permissions", {"fields": ("groups", "user_permissions")}),
         ("important date", {"fields": ("last_login",)}),
